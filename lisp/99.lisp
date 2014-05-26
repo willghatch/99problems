@@ -83,3 +83,24 @@
   (mapcar #'(lambda (x) (if (equal (first x) 1) (second x) x)) (encode ls)))
 
 
+; problem 12
+; run-length decode - use the run-length encoding from problem 11
+(defun decode-modified (ls)
+  (if (null ls) nil (let ((elem (car ls)))
+    (if (listp elem) (append (make-list (first elem) :initial-element (second elem))
+                             (decode-modified (cdr ls)))
+      (cons elem (decode-modified (cdr ls)))))))
+
+; problem 13
+; modified run-length direct version -- make problem 11 directly without first making sublists
+(defun direct-encode (ls)
+  (labels ((make-runl-elem (elem count)
+                           (if (equal count 1) elem (list count elem)))
+           (de-sub (ls precar count)
+                   (cond ((null ls) (list (make-runl-elem precar count)))
+                         ((equal precar (car ls)) (de-sub (cdr ls) precar (+ count 1)))
+                         (t (append (list (make-runl-elem precar count))
+                                    (de-sub (cdr ls) (car ls) 1))))))
+    (if (null ls) nil
+      (de-sub (cdr ls) (car ls) 1))))
+
