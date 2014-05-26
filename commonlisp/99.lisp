@@ -116,3 +116,24 @@
   (if (null ls) nil
     (append (make-list num :initial-element (car ls)) (repli (cdr ls) num))))
 
+; problem 16
+; drop every nth element from a list
+(defun drop-nth (ls n)
+  (labels ((dn-sub (ls n count)
+                   (if (null ls) nil
+                     (if (equal count n) (dn-sub (cdr ls) n 1)
+                       (cons (car ls) (dn-sub (cdr ls) n (+ count 1)))))))
+    (dn-sub ls n 1)))
+
+; problem 17
+; split a list into two - length of the first part given
+; Do not use any pre-defined predicates.
+(defun split (ls len)
+  (labels ((split-sub (ls len count)
+                      (if (null ls) (list nil nil)
+                        (if (equal count len) (list nil ls)
+                          (progn (setf sret (split-sub (cdr ls) len (+ count 1)))
+                            (list (cons (car ls) (first sret)) (second sret)))))))
+    (split-sub ls len 0)))
+;;;;;;; the setf used here isn't just setting a local variable... so how do I fix that?
+
