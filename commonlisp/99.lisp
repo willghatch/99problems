@@ -104,3 +104,15 @@
     (if (null ls) nil
       (de-sub (cdr ls) (car ls) 1))))
 
+; problem 14
+; duplicate elements of a list
+(defun duplicate (ls)
+  (if (null ls) nil
+    (append (list (car ls) (car ls)) (duplicate (cdr ls)))))
+
+; problem 15
+; replicate elements of a list a given number of times (ie (repli '(1 2 3) 3) -> (1 1 1 2 2 2 3 3 3))
+(defun repli (ls num)
+  (if (null ls) nil
+    (append (make-list num :initial-element (car ls)) (repli (cdr ls) num))))
+
