@@ -132,8 +132,7 @@
   (labels ((split-sub (ls len count)
                       (if (null ls) (list nil nil)
                         (if (equal count len) (list nil ls)
-                          (progn (setf sret (split-sub (cdr ls) len (+ count 1)))
+                          (let ((sret (split-sub (cdr ls) len (+ count 1))))
                             (list (cons (car ls) (first sret)) (second sret)))))))
     (split-sub ls len 0)))
-;;;;;;; the setf used here isn't just setting a local variable... so how do I fix that?
 
