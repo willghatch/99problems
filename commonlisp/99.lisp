@@ -1,4 +1,7 @@
 
+;;;; LIST SECTION
+
+
 ;; problem 1
 ;; find the last item in a list
 
@@ -233,6 +236,42 @@
       (mapcar #'(lambda (c scs)
                   (mapcar #'(lambda (sc) (cons c (remove-if #'null sc))) scs))
               combos supercombos))))
-               
+
+;; I guess that was part B, and part A was the less generic one that I thought was just
+;; explanatory to help explain.  So here's A by way of B
+(defun group3 (elems)
+  (group (elems '(2 3 4))))
 
                
+;; problem 28
+;; lists with sublists
+
+;; part a
+;; sort sublists by length (shortest first)
+(defun lsort (xss)
+  (sort xss #'< :key #'length))
+
+;; part b
+;; sort sublists by length frequency (least frequent first)
+(defun lfsort (xss)
+  (let ((with-l (mapcar #'(lambda (x) (cons (length x) x)) xss))
+        (freq-map (make-hash-table)))
+    (loop for elem in with-l do
+          (let ((curfreq (gethash (car elem) freq-map)))
+            (setf (gethash (car elem) freq-map)
+                  (if (null curfreq) 1 (1+ curfreq)))))
+    (mapcar #'cdr (sort with-l #'< :key #'(lambda (x) (gethash (car x) freq-map))))))
+
+
+;; Problems 29 and 30 seem not to exist... in any version of the problem list I can find
+;; (lisp, haskell, or the original prolog versions).
+;; Maybe since the last two had two parts each those counted?
+;; At any rate...
+
+
+;;;; ARITHMETIC SECTION
+
+;; problem 31
+;; Determine whether a given integer is prime
+
+
