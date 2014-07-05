@@ -171,4 +171,21 @@
    ((<= n 1) (cons elem xs))
    (t (cons (car xs) (insert-at elem (cdr xs) (- n 1))))))
 
+; problem 22
+; create a list of an integer range (inclusive)
+; (if end is less than start, make them decrease)
+(defun range (start end)
+  (cond
+   ((equal start end) (list end))
+   ((< start end) (cons start (range (1+ start) end)))
+   (t (cons start (range (1- start) end)))))
 
+
+;; problem 23
+;; select a number of elements from a list at random
+(defun rnd-select (xs n)
+  (if (<= n 0) nil
+    (let ((l (length xs)))
+      (cond
+       ((>= n l) xs)
+       (t (rnd-select (remove-at xs (1+ (random l))) n))))))
