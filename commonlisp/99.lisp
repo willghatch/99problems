@@ -189,3 +189,23 @@
       (cond
        ((>= n l) xs)
        (t (rnd-select (remove-at xs (1+ (random l))) n))))))
+
+;; problem 24
+;; Draw n random numbers from set 1..M (in list)
+(defun lotto-select (n m)
+  (if (<= n 0) nil
+    (cons (1+ (random m)) (lotto-select (1- n) m))))
+
+;; problem 25
+;; generate a random permutation of a list
+(defun rnd-permu (xs)
+  (labels
+   ((subf (xs len)
+          (if (<= len 0) nil
+          (let ((index (1+ (random len))))
+                (cons (element-at xs index)
+                      (subf (remove-at xs index) (1- len)))))))
+   (subf xs (length xs))))
+  
+;; problem 26
+;; Generate combinations of k distinct objects chosen from a list
