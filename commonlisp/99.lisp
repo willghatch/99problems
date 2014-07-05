@@ -136,3 +136,39 @@
                             (list (cons (car ls) (first sret)) (second sret)))))))
     (split-sub ls len 0)))
 
+; problem 18
+; slice a list on indices (inclusive, one-indexed)
+(defun slice (xs start end)
+  (cond
+   ((null xs) nil)
+   ((> start 1) (slice (cdr xs) (- start 1) (- end 1)))
+   ((> end 0) (cons (car xs) (slice (cdr xs) 1 (- end 1))))
+   (t nil)))
+
+; problem 19
+; rotate a list n places to the left (negative values rotate right)
+(defun rotate (xs n)
+  (if (equal n 0) xs
+    (let ((l (length xs)))
+      (if (> n 0) (let ((splits (split xs (mod n l))))
+                    (append (cadr splits) (car splits))))
+      (let ((splits (split xs (+ l (mod n (- l))))))
+        (append (cadr splits) (car splits))))))
+
+; problem 20
+; remove a 1-indexed element from a list
+(defun remove-at (xs n)
+  (cond
+   ((or (null xs) (< n 1)) xs)
+   ((equal n 1) (cdr xs))
+   (t (cons (car xs) (remove-at (cdr xs) (- n 1))))))
+  
+; problem 21
+; insert an element into a list
+(defun insert-at (elem xs n)
+  (cond
+   ((null xs) (list elem))
+   ((<= n 1) (cons elem xs))
+   (t (cons (car xs) (insert-at elem (cdr xs) (- n 1))))))
+
+
