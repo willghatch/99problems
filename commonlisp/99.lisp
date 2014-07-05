@@ -209,3 +209,30 @@
   
 ;; problem 26
 ;; Generate combinations of k distinct objects chosen from a list
+(defun combination (n xs)
+  (labels
+   ((comb-sub (taken t-len rest r-len n)
+              (cond
+               ((equal t-len n) (list taken))
+               ((< (+ t-len r-len) n) (list nil))
+               (t (append (comb-sub (cons (car rest) taken)
+                                    (1+ t-len) (cdr rest) (1- r-len) n)
+                          (comb-sub taken t-len (cdr rest) (1- r-len) n))))))
+   (remove-if #'null (comb-sub nil 0 xs (length xs) n))))
+
+;; problem 27
+;; group the elements of a set into disjoint subsets
+;; ie take a list of elements and a list of group sizes, and list the ways the elements
+;; can be combined into those groups.  Within one group (a b) is equal to (b a),
+;; but if two groups have size two. then ((a b) (c d)) is not equal to ((c d) (a b))
+(defun group (elems gspecs)
+  (if (null gspecs) (list (list nil))
+    (let*
+        ((combos (combination (car gspecs) elems))
+         (supercombos (mapcar #'(lambda (x) (group (set-difference elems x) (cdr gspecs))) combos)))
+      (mapcar #'(lambda (c scs)
+                  (mapcar #'(lambda (sc) (cons c (remove-if #'null sc))) scs))
+              combos supercombos))))
+               
+
+               
