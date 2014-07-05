@@ -274,4 +274,50 @@
 ;; problem 31
 ;; Determine whether a given integer is prime
 
+(defun is-prime (x)
+  (cond
+   ((< x 2) nil) ; Negative primes?  I don't know if that counts.
+   ((= x 2) t)
+   (t (labels ((subf (x n)
+                     (cond
+                      ((= 0 (mod x n)) nil)
+                      ((> (* n n) x) t)
+                      (t (subf x (1+ n))))))
+              (subf x 2)))))
 
+;; problem 32
+;; determine the GCD of two positive integers with euclid's algorithm
+(defun my-gcd (x y) ; I can't define gcd, it's reserved apparently...
+  (let* ((big (max x y))
+         (small (min x y))
+         (r (mod big small)))
+    (if (= 0 r) small
+      (gcd small r))))
+
+;; problem 33
+;; determine if two positive integers are coprime (gcd = 0)
+(defun coprime (x y)
+  (if (= (gcd x y) 1) t nil))
+
+;; problem 34
+;; Calculate Euler's totient function phi(m)
+;; That is, determine the number of smaller positive integers that are coprime,
+;; with a special case of phi(1) = 1.
+(defun totient-phi (m)
+  (if (= 1 m) 1
+    (count t (mapcar #'(lambda (x) (coprime x m)) (range 1 (1- m))))))
+
+;; problem 35
+;; determine the prame factors of a given positive integer
+;; * in a list in ascending order
+(defun prime-factors (x)
+  (if (= 1 x) '(1)
+   (labels
+       ((find-div (x n)
+                  (cond
+                   ((= 1 x) nil)
+                   ((= 0 (mod x n)) (cons n (find-div (/ x n) n)))
+                   ((> (* n n) x) (list x))
+                   (t (find-div x (1+ n))))))
+       (find-div x 2))))
+   
