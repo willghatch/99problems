@@ -321,3 +321,37 @@
                    (t (find-div x (1+ n))))))
        (find-div x 2))))
    
+;: problem 36
+;; determine prime factors as above, but make list of factors and their frequency
+(defun prime-factors-mult (x)
+  ;; I have to swap elements of the run-length encoding, because they want them in
+  ;; the other order...
+  (mapcar #'(lambda (x) (list (cadr x) (car x))) (encode (prime-factors x))))
+
+;; problem 37
+;; totient func improved
+;; Use phi(m) = (p1-1) * p1**(m1-1) + (p2-1) * p2**(m2-1) + ... where
+;;   pn = nth prime factor, mn = multiplicity of pn
+;; CORRECTION!!!!  The lisp version of the problems has that formula wrong.  It
+;; should be a product, not a sum.
+(defun totient-phi-improved (x)
+  (let* ((factors (prime-factors-mult x)))
+    (reduce #'* (mapcar
+                 #'(lambda (fac) (let ((p (car fac)) (m (cadr fac)))
+                                   (* (1- p) (expt p (1- m)))))
+                 factors))))
+
+;; problem 38
+;; compare totient solutions...
+;; Well, the second one is obviously much better.
+;; Run them on 10090
+;; The second one seemed pretty fast.  The first one got a stack overflow, because it's
+;;   trying to load these ginormous lists.
+;; Let's try something a little more modest, to give #1 a chance.  Using 1000:
+;; #1 took 20 times as long and took 13 times as much memory.
+
+
+;; problem 39
+;; given a range with a lower and upper limit, make a list of the primes in that range
+
+
