@@ -358,5 +358,56 @@
 
 ;; problem 39
 ;; given a range with a lower and upper limit, make a list of the primes in that range
+;; First I'll make a function to do that with a lower limit of 2...
+(defun prime-list (x)
+  (cond
+   ((< x 2) nil)
+   ((= x 2) '(2))
+   (t (flet ((divides (num divs)
+                      (loop for d in divs do
+                            (if (= 0 (mod num d)) (return t) nil))))
+            (let ((prev-list (prime-list (1- x))))
+              (if (divides x prev-list) prev-list
+                (append prev-list (list x))))))))
 
+(defun prime-range (a b)
+  (remove-if #'(lambda (x) (< x a)) (prime-list b)))
+
+;; problem 40
+;; Goldbach's conjecture
+;; return a list of the two primes that sum to the given even numbered input
+(defun goldbach (even)
+  (if (not (evenp even)) nil
+    (let ((primes (prime-list even)))
+      (loop for p in primes do
+            (let ((pair (loop for q in primes do
+                              (if (= even (+ p q))
+                                  (return (list p q))
+                                nil))))
+              (if pair (return pair) nil))))))
+
+;; problem 41
+;; Given a range with limits, print a list of all even numbers and their goldbach composition
+;; I'll make one that just makes lists first...
+(defun goldbach-list-nonprint (low high)
+  (loop for i from low upto high when (evenp i) collecting (list i (goldbach i))))
+(defun goldbach-list (low high)
+  (mapcar #'(lambda (x) (format t "~a = ~a + ~a~%" (car x) (caadr x) (cadadr x)))
+          (goldbach-list-nonprint low high)))
+
+;; bonus to 41 -- find out how many even numbers have both goldbach numbers greater than 50
+;; in the range 2..3000
+(defun gb-count-gt-50 (low high)
+  (length (remove-if #'(lambda (x) (or (< (caadr x) 50) (< (cadadr x) 50)))
+                     (goldbach-list-nonprint low high))))
+;; haha, my prime-list function gets a stack overflow before 3000.  I don't care to re-write that
+;; right now.  No bonus points for me I guess...
+
+
+;; Problems 42-45 are mysteriously not there... who knows where they are.
+
+;;;; LOGIC AND CODES SECTION
+
+;; problem 46
+;; 
 
