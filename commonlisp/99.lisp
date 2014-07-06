@@ -229,18 +229,23 @@
 ;; can be combined into those groups.  Within one group (a b) is equal to (b a),
 ;; but if two groups have size two. then ((a b) (c d)) is not equal to ((c d) (a b))
 (defun group (elems gspecs)
-  (if (null gspecs) (list (list nil))
-    (let*
-        ((combos (combination (car gspecs) elems))
-         (supercombos (mapcar #'(lambda (x) (group (set-difference elems x) (cdr gspecs))) combos)))
-      (mapcar #'(lambda (c scs)
-                  (mapcar #'(lambda (sc) (cons c (remove-if #'null sc))) scs))
-              combos supercombos))))
+  (cond
+   ((null gspecs) nil)
+   ((null (cdr gspecs)) (mapcar #'(lambda (x) (list x)) (combination (car gspecs) elems)))
+   (t (let* ((combos (combination (car gspecs) elems))
+             (set-of-groups (mapcar #'(lambda (comb) (group (set-difference elems comb) (cdr gspecs))) combos))
+             (set-of-gr-with-combos (mapcar #'(lambda (c gr)
+                                                (mapcar #'(lambda (cs)
+                                                            (cons c cs))
+                                                        gr))
+                                            combos set-of-groups)))
+        (reduce #'append set-of-gr-with-combos)))))
+
 
 ;; I guess that was part B, and part A was the less generic one that I thought was just
 ;; explanatory to help explain.  So here's A by way of B
 (defun group3 (elems)
-  (group (elems '(2 3 4))))
+  (group elems '(2 3 4)))
 
                
 ;; problem 28
